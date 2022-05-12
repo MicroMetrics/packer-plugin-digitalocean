@@ -3,11 +3,11 @@ module github.com/hashicorp/packer-plugin-digitalocean
 go 1.16
 
 require (
-	github.com/aws/aws-sdk-go v1.38.25
+	github.com/aws/aws-sdk-go v1.40.34
 	github.com/digitalocean/godo v1.62.0
-	github.com/hashicorp/hcl/v2 v2.10.0
-	github.com/hashicorp/packer-plugin-sdk v0.2.3
+	github.com/hashicorp/hcl/v2 v2.12.0
+	github.com/hashicorp/packer-plugin-sdk v0.2.13
 	github.com/mitchellh/mapstructure v1.4.1
-	github.com/zclconf/go-cty v1.8.3
-	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43
+	github.com/zclconf/go-cty v1.10.0
+	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f
 )
