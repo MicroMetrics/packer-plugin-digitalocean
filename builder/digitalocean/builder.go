@@ -103,7 +103,7 @@ func (b *Builder) Run(ctx context.Context, ui packersdk.Ui, hook packersdk.Hook)
 	state.Put("ui", ui)
 
 	// Only generate the temp key pair if one is not already provided
-	genTempKeyPair := b.config.SSHKeyID == 0 || b.config.Comm.SSHPrivateKeyFile == ""
+	genTempKeyPair := !b.config.SkipKeygen && (b.config.SSHKeyID == 0 || b.config.Comm.SSHPrivateKeyFile == "")
 
 	// Build the steps
 	steps := []multistep.Step{
