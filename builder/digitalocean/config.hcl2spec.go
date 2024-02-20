@@ -92,6 +92,7 @@ type FlatConfig struct {
 	VPCUUID                   *string           `mapstructure:"vpc_uuid" required:"false" cty:"vpc_uuid" hcl:"vpc_uuid"`
 	ConnectWithPrivateIP      *bool             `mapstructure:"connect_with_private_ip" required:"false" cty:"connect_with_private_ip" hcl:"connect_with_private_ip"`
 	SSHKeyID                  *int              `mapstructure:"ssh_key_id" required:"false" cty:"ssh_key_id" hcl:"ssh_key_id"`
+	SkipKeygen                *bool             `mapstructure:"skip_keygen" required:"false" cty:"skip_keygen" hcl:"skip_keygen"`
 }
 
 // FlatMapstructure returns a new FlatConfig.
@@ -188,6 +189,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"vpc_uuid":                     &hcldec.AttrSpec{Name: "vpc_uuid", Type: cty.String, Required: false},
 		"connect_with_private_ip":      &hcldec.AttrSpec{Name: "connect_with_private_ip", Type: cty.Bool, Required: false},
 		"ssh_key_id":                   &hcldec.AttrSpec{Name: "ssh_key_id", Type: cty.Number, Required: false},
+		"skip_keygen":                  &hcldec.AttrSpec{Name: "skip_keygen", Type: cty.Bool, Required: false},
 	}
 	return s
 }
