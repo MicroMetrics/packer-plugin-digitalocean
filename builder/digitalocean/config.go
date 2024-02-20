@@ -114,6 +114,9 @@ type Config struct {
 	// The ID of an existing SSH key on the DigitalOcean account. This should be
 	// used in conjunction with `ssh_private_key_file`.
 	SSHKeyID int `mapstructure:"ssh_key_id" required:"false"`
+	// Set to true if you are connecting as a non-root user whose public key is
+	// already available on the base image.
+	SkipKeygen bool `mapstructure:"skip_keygen" required:"false"`
 
 	ctx interpolate.Context
 }
