@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/digitalocean/godo"
@@ -77,6 +79,43 @@ func (s *stepSnapshot) Run(ctx context.Context, state multistep.StateBag) multis
 		state.Put("error", err)
 		ui.Error(err.Error())
 		return multistep.ActionHalt
+	}
+
+	if len(c.SnapshotTags) > 0 {
+		var finalErr error
+		for _, tag := range c.SnapshotTags {
+			tagReq := &godo.TagResourcesRequest{
+				Resources: []godo.Resource{
+					{ID: strconv.Itoa(imageId), Type: "image"},
+				},
+			}
+
+			resp, err := client.Tags.TagResources(context.TODO(), tag, tagReq)
+			if err != nil {
+				// If the tag doesn't exist, create it and try again.
+				if resp != nil && resp.StatusCode == http.StatusNotFound {
+					log.Printf("Tag '%s' not found; creating it...", tag)
+					_, _, err = client.Tags.Create(context.TODO(), &godo.TagCreateRequest{Name: tag})
+					if err != nil {
+						finalErr = fmt.Errorf("Error creating tag: %s", err)
+						break
+					}
+					_, err = client.Tags.TagResources(context.TODO(), tag, tagReq)
+					if err != nil {
+						finalErr = fmt.Errorf("Error tagging image: %s", err)
+						break
+					}
+				}
+			}
+
+			ui.Say(fmt.Sprintf("Added snapshot tag: %s...", tag))
+		}
+		if finalErr != nil {
+			err := fmt.Errorf("Error tagging image: %s", err)
+			state.Put("error", err)
+			ui.Error(err.Error())
+			return multistep.ActionHalt
+		}
 	}
 
 	if len(c.SnapshotRegions) > 0 {

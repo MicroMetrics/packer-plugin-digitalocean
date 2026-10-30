@@ -106,6 +106,8 @@ each category, the available configuration keys are alphabetized.
 
 - `tags` ([]string) - Tags to apply to the droplet when it is created
 
+- `snapshot_tags` ([]string) - Tags to apply to the snapshot after it is created
+
 - `vpc_uuid` (string) - UUID of the VPC which the droplet will be created in. Before using this,
   private_networking should be enabled.
 
@@ -300,7 +302,7 @@ In addition to the builder options, a
   **NOTE**: Guests using Windows with Win32-OpenSSH v9.1.0.0p1-Beta, scp
   (the default protocol for copying data) returns a a non-zero error code since the MOTW
   cannot be set, which cause any file transfer to fail. As a workaround you can override the transfer protocol
-  with SFTP instead `ssh_file_transfer_protocol = "sftp"`.
+  with SFTP instead `ssh_file_transfer_method = "sftp"`.
 
 - `ssh_proxy_host` (string) - A SOCKS proxy host to use for SSH connection
 

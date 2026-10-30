@@ -1,5 +1,6 @@
 NAME=digitalocean
 BINARY=packer-plugin-${NAME}
+PLUGIN_FQN="$(shell grep -E '^module' <go.mod | sed -E 's/module *//')"
 
 COUNT?=1
 TEST?=$(shell go list ./...)
@@ -10,9 +11,9 @@ HASHICORP_PACKER_PLUGIN_SDK_VERSION?=$(shell go list -m github.com/hashicorp/pac
 build:
 	@go build -o ${BINARY}
 
-dev: build
-	@mkdir -p ~/.packer.d/plugins/
-	@mv ${BINARY} ~/.packer.d/plugins/${BINARY}
+dev:
+	@go build -ldflags="-X '${PLUGIN_FQN}/version.VersionPrerelease=dev'" -o '${BINARY}'
+	packer plugins install --path ${BINARY} "$(shell echo "${PLUGIN_FQN}" | sed 's/packer-plugin-//')"
 
 test:
 	@go test -v -race -count $(COUNT) ./...  $(TEST) -timeout=3m
@@ -42,7 +43,7 @@ check-generate: generate
 	fi
 
 install-golangci-lint:
-	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.56.2
 
 lint: install-golangci-lint
 	@golangci-lint run ./...
